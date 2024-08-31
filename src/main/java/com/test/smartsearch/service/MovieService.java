@@ -2,6 +2,7 @@ package com.test.smartsearch.service;
 
 import com.test.smartsearch.mapper.MovieMapper;
 import com.test.smartsearch.model.Movie;
+import com.test.smartsearch.payload.searchmovies.SearchMovieInfo;
 import com.test.smartsearch.payload.searchmovies.SearchMovieResponse;
 import com.test.smartsearch.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,9 @@ public class MovieService {
 
         Page<Movie> movies = movieRepository.search(query, moviePages);
 
-        SearchMovieResponse response = MovieMapper.INSTANCE.moviePagesToSearchMovieResponse(movies);
+        List<SearchMovieInfo> movieInfos = MovieMapper.INSTANCE.moviesToSearchMovieInfos(movies.getContent());
+
+        SearchMovieResponse response = MovieMapper.INSTANCE.moviePagesToSearchMovieResponse(movies, movieInfos);
 
         log.info("Search movie response: {}", response);
 
