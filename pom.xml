@@ -18,6 +18,7 @@
         <java.version>21</java.version>
         <swagger.version>2.6.0</swagger.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <redistc.version>1.6.4</redistc.version>
     </properties>
     <dependencies>
         <dependency>
@@ -100,6 +101,11 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.redis.testcontainers</groupId>
+            <artifactId>testcontainers-redis</artifactId>
+            <version>${redistc.version}</version>
         </dependency>
     </dependencies>
 

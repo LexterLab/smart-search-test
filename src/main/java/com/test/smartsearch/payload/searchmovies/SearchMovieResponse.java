@@ -1,6 +1,5 @@
 package com.test.smartsearch.payload.searchmovies;
 
-import com.test.smartsearch.model.Movie;
 import lombok.Builder;
 
 import java.util.List;
