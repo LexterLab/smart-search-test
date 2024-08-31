@@ -10,7 +10,7 @@ ALTER TABLE movies
     ADD CONSTRAINT uc_movies_name UNIQUE (name);
 
 INSERT INTO movies (id, name, genre)
-VALUES ('dca392f0-b89a-490e-ba57-d2dfc0cd0900', 'Hogwarts Mysteries', 'Mystery')
+VALUES ('dca392f0-b89a-490e-ba57-d2dfc0cd0900', 'Hogwarts Mysteries', 'Mystery');
 
 INSERT INTO movies (id, name, genre)
 VALUES ('14951104-0dd0-4327-928c-db056f93aa66', 'Galactic Adventures', 'Science Fiction');
@@ -28,13 +28,13 @@ INSERT INTO movies (id, name, genre)
 VALUES ('92c85345-7915-4911-b89f-76ad8fcbd56a', 'Culinary Dreams', 'Drama');
 
 INSERT INTO movies (id, name, genre)
-VALUES ('4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7f8g9h', 'Virtual Reality', 'Science Fiction');
+VALUES ('7e87b2f3-d518-48b4-ae6d-5adb22c45cdb', 'Virtual Reality', 'Science Fiction');
 
 INSERT INTO movies (id, name, genre)
-VALUES ('5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u', 'Shadow Hunters', 'Horror');
+VALUES ('ec9d7476-b0fa-47f2-aa9c-854e49a4fc01', 'Shadow Hunters', 'Horror');
 
 INSERT INTO movies (id, name, genre)
-VALUES ('6h7i8j9k-0l1m-2n3o-4p5q-6r7s8t9u0v1w', 'The Time Traveler', 'Fantasy');
+VALUES ('df9d6da0-1b0a-4f3a-9c36-b7228d57bdb6', 'The Time Traveler', 'Fantasy');
 
 INSERT INTO movies (id, name, genre)
-VALUES ('7i8j9k0l-1m2n-3o4p-5q6r-7s8t9u0v1w2x', 'Whispers in the Dark', 'Mystery');
+VALUES ('473593c7-a07a-4dfa-b711-7e2c0ddea764', 'Whispers in the Dark', 'Mystery');

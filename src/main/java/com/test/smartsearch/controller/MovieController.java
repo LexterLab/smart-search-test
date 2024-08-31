@@ -23,7 +23,7 @@ public class MovieController {
             @RequestParam String query,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "updatedAt", required = false) String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "name", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
         return new ResponseEntity<>(movieService.searchMovies(query, pageNo, pageSize, sortBy, sortDir), HttpStatus.OK);
     }

@@ -15,6 +15,9 @@ import java.util.List;
 public interface MovieMapper {
     MovieMapper INSTANCE = Mappers.getMapper(MovieMapper.class);
 
+    @Mapping(target = "id", expression = "java(movie.getId())")
+    @Mapping(target = "genre", expression = "java(movie.getGenre())")
+    @Mapping(target = "name", expression = "java(movie.getName())")
     SearchMovieInfo movieToSearchMovieInfo(Movie movie);
 
     List<SearchMovieInfo> moviesToSearchMovieInfos(List<Movie> movies);
