@@ -1,14 +1,19 @@
 package com.test.smartsearch.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.smartsearch.model.Movie;
 import com.test.smartsearch.model.SearchKeyWord;
+import com.test.smartsearch.payload.updatemovie.UpdateMovieRequest;
 import com.test.smartsearch.repository.MovieRepository;
 import com.test.smartsearch.repository.SearchKeywordRepository;
 import com.test.smartsearch.route.RestAPIRoutes;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -32,6 +37,14 @@ class MovieControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private SearchKeywordRepository searchKeywordRepository;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @AfterEach
+    void tearDown() {
+        searchKeywordRepository.deleteAll();
+    }
 
     @Test
     void shouldRespondWithOKAndFoundMoviesWithoutCache() throws Exception {
@@ -128,6 +141,41 @@ class MovieControllerTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.totalElements").value(0));
 
         assertEquals(0, numberOfCaches);
+    }
+
+    @Test
+    void shouldRespondWithOKAndMovieIdAndUpdateCacheWhenUpdatingMovie() throws Exception {
+        String id = "dca392f0-b89a-490e-ba57-d2dfc0cd0900";
+
+        Movie hogwartsMovie = movieRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new AssertionError("Movie not found"));
+
+        SearchKeyWord keyWord = SearchKeyWord
+                .builder()
+                .movies(List.of(hogwartsMovie))
+                .keyword("Mystery")
+                .build();
+
+        searchKeywordRepository.save(keyWord);
+
+        UpdateMovieRequest request = UpdateMovieRequest
+                .builder()
+                .genre("Mystery")
+                .name("Hogwarts")
+                .build();
+
+        mockMvc.perform(patch(RestAPIRoutes.UPDATE_MOVIE, id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.movieId").value(id));
+
+        Movie updatedMovie = movieRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new AssertionError("Movie not found"));
+
+        assertEquals(request.genre(), updatedMovie.getGenre());
+        assertEquals(request.name(), updatedMovie.getName());
     }
 
 }

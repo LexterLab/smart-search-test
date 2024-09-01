@@ -1,15 +1,22 @@
 package com.test.smartsearch.controller;
 
 import com.redis.testcontainers.RedisContainer;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 @Testcontainers
+@SpringBootTest
 public class BaseIntegrationTest {
 
     @Container
@@ -20,8 +27,23 @@ public class BaseIntegrationTest {
             .withPassword("test");
 
     @Container
-    private static RedisContainer redis = new RedisContainer(
+    static RedisContainer redis = new RedisContainer(
             RedisContainer.DEFAULT_IMAGE_NAME.withTag(RedisContainer.DEFAULT_TAG));
+
+    @Container
+    static final KafkaContainer kafka = new KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:7.6.1")
+    );
+
+    @Autowired
+    private Flyway flyway;
+
+    @AfterEach
+    void tearDown() {
+        flyway.clean();
+        flyway.migrate();
+    }
+
 
     @BeforeAll
     static void beforeAll() {
@@ -46,7 +68,6 @@ public class BaseIntegrationTest {
         registry.add("spring.data.redis.host", redis::getHost);
         registry.add("spring.data.redis.port", redis::getFirstMappedPort);
 
-        //test secret
-        registry.add("app.jwt-secret", () -> "7447a8028b28b2b423c0e6307e41e173b97d1d97d2fd03d87fd8e13195176edf");
+        registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
     }
 }
