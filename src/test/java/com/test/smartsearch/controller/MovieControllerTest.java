@@ -8,7 +8,6 @@ import com.test.smartsearch.repository.MovieRepository;
 import com.test.smartsearch.repository.SearchKeywordRepository;
 import com.test.smartsearch.route.RestAPIRoutes;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -176,6 +175,91 @@ class MovieControllerTest extends BaseIntegrationTest {
 
         assertEquals(request.genre(), updatedMovie.getGenre());
         assertEquals(request.name(), updatedMovie.getName());
+    }
+
+    @Test
+    void shouldRespondWithBadRequestWhenUpdatingMovieWithBlankName() throws Exception {
+        String id = "dca392f0-b89a-490e-ba57-d2dfc0cd0900";
+
+        UpdateMovieRequest request = UpdateMovieRequest
+                .builder()
+                .genre("Mystery")
+                .name(" ")
+                .build();
+
+        mockMvc.perform(patch(RestAPIRoutes.UPDATE_MOVIE, id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRespondWithBadRequestWhenUpdatingMovieWithOverMaxName() throws Exception {
+        String id = "dca392f0-b89a-490e-ba57-d2dfc0cd0900";
+
+        UpdateMovieRequest request = UpdateMovieRequest
+                .builder()
+                .genre("Mystery")
+                .name("MysteriesOfDiabloMysteriesOfDiabloMysteriesOfDiabloMysteriesOfDiabloMysteriesOfDiabloMysteriesOfDiablo")
+                .build();
+
+        mockMvc.perform(patch(RestAPIRoutes.UPDATE_MOVIE, id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRespondWithBadRequestWhenUpdatingMovieWithNullGenre() throws Exception {
+        String id = "dca392f0-b89a-490e-ba57-d2dfc0cd0900";
+
+        UpdateMovieRequest request = UpdateMovieRequest
+                .builder()
+                .genre(null)
+                .name("Dance of the lambda")
+                .build();
+
+        mockMvc.perform(patch(RestAPIRoutes.UPDATE_MOVIE, id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRespondWithBadRequestWhenUpdatingMovieWithBelowMinGenre() throws Exception {
+        String id = "dca392f0-b89a-490e-ba57-d2dfc0cd0900";
+
+        UpdateMovieRequest request = UpdateMovieRequest
+                .builder()
+                .genre("My")
+                .name("Dance of the lambda")
+                .build();
+
+        mockMvc.perform(patch(RestAPIRoutes.UPDATE_MOVIE, id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRespondWithBadRequestWhenUpdatingMovieWithAboveMaxGenre() throws Exception {
+        String id = "dca392f0-b89a-490e-ba57-d2dfc0cd0900";
+
+        UpdateMovieRequest request = UpdateMovieRequest
+                .builder()
+                .genre("MysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMysteryMystery")
+                .name("Dance of the lambda")
+                .build();
+
+        mockMvc.perform(patch(RestAPIRoutes.UPDATE_MOVIE, id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 
 }
