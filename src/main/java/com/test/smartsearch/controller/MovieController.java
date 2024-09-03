@@ -7,6 +7,7 @@ import com.test.smartsearch.service.GetSearchSuggestions;
 import com.test.smartsearch.service.SearchMovies;
 import com.test.smartsearch.service.UpdateMovie;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class MovieController {
 
     @PatchMapping("movies/{movieId}")
     public ResponseEntity<UpdateMovieResponse> updateMovie(@PathVariable String movieId,
-                                                           @RequestBody UpdateMovieRequest request) {
+                                                           @RequestBody @Valid UpdateMovieRequest request) {
         UpdateMovieRequest updateMovieRequest = UpdateMovieRequest
                 .builder()
                 .genre(request.genre())
