@@ -10,7 +10,6 @@ import org.hibernate.validator.constraints.UUID;
 @Builder
 public record UpdateMovieRequest(
         @JsonIgnore
-        @UUID(message = "Field movieId must be UUID")
         String movieId,
         @Schema(example = "Harry Potter")
         @NotBlank(message = "Field name cannot be blank")
